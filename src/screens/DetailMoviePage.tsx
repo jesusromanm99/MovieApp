@@ -32,17 +32,17 @@ const DetailMoviePage: FC<Props> = ({route}) => {
         <ScrollView>
           <Image
             w="100%"
-            h={500}
+            h={600}
             src={
               movie?.Poster == 'N/A'
                 ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_yh7gI-s3P1HxJR9zI2Gvy3zG9BOJezG0sQ&usqp=CAU'
                 : movie?.Poster
             }
             alt={`${movie?.Title} image`}
-            resizeMode="cover"
+            resizeMode="stretch"
           />
           <Box style={globalStyle.mainContainer} pb={5}>
-            <Box style={[styles.card]} mt={-50} m="auto">
+            <Box style={[styles.card]} mt={-70} m="auto">
               <Row justifyContent={'space-between'} alignItems="center">
                 <Text color={'green.100'} fontSize={20} flexGrow={1} maxW="90%">
                   {movie?.Title}
