@@ -4,22 +4,35 @@ import {Movie} from '../types/MoviesTypes';
 import MovieItem from '../components/MovieItem';
 import Spinner from '../components/Spinner';
 import {Row, Input, Button, Text} from 'native-base';
-import {
-  SafeAreaView,
-  StyleSheet,
-  FlatList,
-  ActivityIndicator,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, FlatList} from 'react-native';
+import NoData from '../components/NoData';
 const MoviePage: FC = () => {
   const [titleSearch, setTitleSearch] = useState<string>('Batman');
   const [yearSearch, setYearSearch] = useState<string>('');
   const [movies, setMovies] = useState<Movie[] | null>();
   const [isLoadingMovies, setIsLoadingMovies] = useState<boolean>(false);
+  const [error, setError] = useState('');
+  const validateInputs = (): boolean => {
+    if (!titleSearch) {
+      setError('Introduzca la película a buscar');
+      return false;
+    }
+    if (Number(yearSearch) < 0) {
+      setError('Introduzca un año mayor que 0 (cero)');
+      return false;
+    }
+    setError('');
+    return true;
+  };
   const getMovie = async () => {
+    const isValid: boolean = validateInputs();
+    if (!isValid) return;
     setIsLoadingMovies(true);
     const data = await searchMovieAPI(titleSearch, yearSearch);
     setIsLoadingMovies(false);
-    setMovies(data);
+
+    if (data) setMovies(data);
+    else setError('Película no encontrada');
   };
   useEffect(() => {
     getMovie();
@@ -45,25 +58,30 @@ const MoviePage: FC = () => {
           value={yearSearch}
           keyboardType="numeric"
           onChangeText={value => setYearSearch(value)}
+          maxLength={4}
         />
       </Row>
       <Button onPress={getMovie} mb={3}>
         Buscar
       </Button>
       {isLoadingMovies == false ? (
-        <FlatList
-          data={movies}
-          renderItem={({item}) => (
-            <MovieItem
-              Poster={item.Poster}
-              Title={item.Title}
-              imdbRating={item.imdbRating}
-              Plot={item.Plot}
-              imdbID={item.imdbID}
-            />
-          )}
-          keyExtractor={(item: Movie) => item.imdbID}
-        />
+        error !== '' ? (
+          <NoData description={error} />
+        ) : (
+          <FlatList
+            data={movies}
+            renderItem={({item}) => (
+              <MovieItem
+                Poster={item.Poster}
+                Title={item.Title}
+                imdbRating={item.imdbRating}
+                Plot={item.Plot}
+                imdbID={item.imdbID}
+              />
+            )}
+            keyExtractor={(item: Movie) => item.imdbID}
+          />
+        )
       ) : (
         <Spinner />
       )}

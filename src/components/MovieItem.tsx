@@ -6,6 +6,7 @@ import {Row, Text, Column, Image} from 'native-base';
 import globalStyles from '../styles/globalStyles';
 const MovieItem: FC<Movie> = movie => {
   const navigation = useNavigation();
+
   return (
     <Pressable
       style={styles.movieContainer}
@@ -16,9 +17,11 @@ const MovieItem: FC<Movie> = movie => {
         <Image
           w={150}
           minH={250}
-          source={{
-            uri: movie.Poster,
-          }}
+          src={
+            movie.Poster == 'N/A'
+              ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_yh7gI-s3P1HxJR9zI2Gvy3zG9BOJezG0sQ&usqp=CAU'
+              : movie.Poster
+          }
           resizeMode="cover"
           alt={`${movie.Title} image`}
           style={styles.movieImage}
@@ -27,9 +30,11 @@ const MovieItem: FC<Movie> = movie => {
           <Text color={'gray.100'} fontSize={20}>
             {movie.Title}
           </Text>
-          <Text color={'gray.500'}>{movie.Plot}</Text>
+          <Text color={'gray.500'}>
+            {movie.Plot == 'N/A' ? 'Sin descripción' : movie.Plot}
+          </Text>
           <Text color={'yellow.500'} fontSize={26}>
-            {movie.imdbRating}
+            {movie.imdbRating == 'N/A' ? '1.0' : movie.imdbRating}
           </Text>
         </Column>
       </Row>
