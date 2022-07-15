@@ -1,13 +1,16 @@
 import React, {FC} from 'react';
-import {View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
+import {NativeBaseProvider} from 'native-base';
+
 //Screens
-import MoviePage from './src/screens/MoviePage';
+import MovieNavigator from './src/navigations/MovieNavigator';
 
 const App: FC = () => {
   return (
     <NavigationContainer>
-      <MoviePage />
+      <NativeBaseProvider>
+        <MovieNavigator />
+      </NativeBaseProvider>
     </NavigationContainer>
   );
 };
